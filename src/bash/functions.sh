@@ -79,7 +79,7 @@ sbt_release() {
     local -r DEFAULT_SBT_PUBLISH_ACTION='+publishSigned'
     local -r DEFAULT_SBT_TASKS=';+compile;+test;+doc'
 
-    if is_git_project_clean || [ "$DRY_RUN" -ne 0 ]
+    if is_git_project_clean || [ "$DRY_RUN" -eq 1 ]
     then
         # Publish locally first for the scripted tests.
         sbt "${SBT_CLEAN_ACTION:-$DEFAULT_SBT_CLEAN_ACTION}"
@@ -87,7 +87,7 @@ sbt_release() {
         sbt "${SBT_TASKS:-$DEFAULT_SBT_TASKS}"
 
         # Exit here on DRY_RUN
-        if [ "$DRY_RUN" -ne 0 ]
+        if [ "$DRY_RUN" -eq 1 ]
         then
             return 0
         fi
