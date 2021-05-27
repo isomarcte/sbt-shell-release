@@ -79,6 +79,8 @@ sbt_release() {
     local -r DEFAULT_SBT_PUBLISH_ACTION='+publishSigned'
     local -r DEFAULT_SBT_TASKS=';+compile;+test;+doc'
 
+    setup_fake_home
+
     if is_git_project_clean || [ "$DRY_RUN" -eq 1 ]
     then
         # Publish locally first for the scripted tests.
