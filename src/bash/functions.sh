@@ -78,6 +78,8 @@ sbt_release() {
     local -r DEFAULT_SBT_PUBLISH_LOCAL_ACTION='+publishLocal'
     local -r DEFAULT_SBT_PUBLISH_ACTION='+publishSigned'
     local -r DEFAULT_SBT_TASKS=';+compile;+test;+doc'
+    local -r ORIGINAL_HOME="${HOME}"
+    local -r ORIGINAL_JAVA_TOOL_OPTIONS="${JAVA_TOOL_OPTIONS}"
 
     setup_fake_home
 
@@ -103,6 +105,14 @@ sbt_release() {
         read -r -p 'Continue with publish? Type (YES): ' PUBLISH
         if [ "${PUBLISH:?}" = 'YES' ]
         then
+            # For the actual release, pivot back to the original HOME
+            # value. This ensures things like the gpg setup are
+            # correct.
+            #
+
+            export HOME="${ORIGINAL_HOME}"
+            export JAVA_TOOL_OPTIONS="${ORIGINAL_JAVA_TOOL_OPTIONS}"
+
             sbt "${SBT_PUBLISH_ACTION:-$DEFAULT_SBT_PUBLISH_ACTION}"
         else
             echo "${PUBLISH} is not YES. Aborting." 1>&2
