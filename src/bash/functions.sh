@@ -81,6 +81,12 @@ sbt_release() {
 
     setup_fake_home
 
+    # This cleans up some benign, but noisy, warnings.
+    if [ -z "$DRY_RUN" ]
+    then
+        DRY_RUN=0
+    fi
+
     if is_git_project_clean || [ "$DRY_RUN" -eq 1 ]
     then
         # Publish locally first for the scripted tests.
